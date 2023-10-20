@@ -89,7 +89,7 @@ class BiletUlgowy(Bilet):
 
 # tworzenie bazy sqlite
 
-# Create the database engine with isolation level "READ_COMMITTED"
+# tworzenie bazy z poziomem izolacji read committed
 engine = create_engine("postgresql://yourusername:yourpassword@localhost:5433/yourdatabase", isolation_level="READ_COMMITTED")
 
 
@@ -97,16 +97,13 @@ engine = create_engine("postgresql://yourusername:yourpassword@localhost:5433/yo
 Base.metadata.create_all(engine)
 
 
-# tworzenie tabel
-# Setting the isolation level to 'READ COMMITTED'
-
 # Create a session
 Session = sessionmaker(bind=engine)
 session = Session()
 
 
 
-# ACID - Adding a new Klient record
+# regula ACID
 try:
     new_klient = Klient(imie_nazwisko="John Doe", wiek=30)
     session.add(new_klient)
@@ -116,7 +113,7 @@ except IntegrityError:
 
 
 
-# Optimistic Lock - Updating a Klient record
+# Blokada optymistyczna
 klient_to_update = session.query(Klient).filter_by(id=1).first()
 if klient_to_update:
     klient_to_update.wiek += 1
